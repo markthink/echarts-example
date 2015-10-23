@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>折线散点混搭</title>
+</head>
+<body>
+    <!--为ECHARTS准备一个具备大小的DOM -->
+    <div id="main" style="height:400px"></div>
+    <!-- ECHARTS单文件引入 -->
+    <script src="../../echarts/build/dist/echarts.js"></script>
+
+    <script>
+        //路径配置
+        require.config({
+            paths: {
+                echarts: '../../echarts/build/dist'
+            }
+        });
+        //使用
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/line',
+                    'echarts/chart/bar',//使用柱状图就加载BAR模块 按需加载
+                    'echarts/chart/scatter',
+                    'echarts/chart/k',
+                    'echarts/chart/pie',
+                    'echarts/chart/radar',
+                    'echarts/chart/force',
+                    'echarts/chart/chord',
+                    'echarts/chart/gauge',
+                    'echarts/chart/funnel',
+                    'echarts/chart/eventRiver',
+                    'echarts/chart/venn',
+                    'echarts/chart/treemap',
+                    'echarts/chart/tree',
+                    'echarts/chart/wordCloud',
+                    'echarts/chart/heatmap'
+                ],
+                function(ec){
+                    //基于准备好的DOM 初始化ECHARTS图表
+                    var myChart = ec.init(document.getElementById('main'));
+
+                    var option = {
+                        tooltip : {
+                            trigger: 'axis'
+                        },
+                        toolbox: {
+                            show : true,
+                            feature : {
+                                mark : {show: true},
+                                dataView : {show: true, readOnly: false},
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+                        dataRange: {
+                            min: 0,
+                            max: 100,
+                            orient: 'horizontal',
+                            y: 'top',
+                            //text:['高','低'],           // 文本，默认为数值文本
+                            color:['lightgreen','yellow'],
+                            splitNumber: 5
+                        },
+                        xAxis : [
+                            {
+                                type : 'category',
+                                boundaryGap : false,
+                                data : function (){
+                                    var list = [];
+                                    for (var i = 1; i <= 30; i++) {
+                                        list.push('2013-03-' + i);
+                                    }
+                                    return list;
+                                }()
+                            },
+                            {
+                                type : 'value',
+                                scale : true,
+                                splitNumber: 29,
+                                axisLabel: {show:false},
+                                splitLine: {show:false}
+                            }
+                        ],
+                        yAxis : [
+                            {
+                                type : 'value'
+                            },
+                            {
+                                type : 'value'
+                            }
+                        ],
+                        animation: false,
+                        series : [
+                            {
+                                name:'散点',
+                                type:'scatter',
+                                tooltip : {
+                                    trigger: 'item',
+                                    formatter : function (params) {
+                                        return '2013-03-' + params.value[0] + '<br/>'
+                                                + params.seriesName + ' : '
+                                                + params.value[1] + ', '
+                                                + params.value[2];
+                                    }
+                                },
+                                yAxisIndex:1,
+                                xAxisIndex:1,
+                                symbol: 'circle',
+                                symbolSize: function (value){
+                                    return Math.round(value[2]/10);
+                                },
+                                data: (function () {
+                                    var d = [];
+                                    var len = 200;
+                                    var value;
+                                    while (len--) {
+                                        d.push([
+                                            Math.round(Math.random()*29) + 1,
+                                            (Math.random()*30).toFixed(2) - 0,
+                                            (Math.random()*100).toFixed(2) - 0
+                                        ]);
+                                    }
+                                    return d;
+                                })()
+                            },
+                            {
+                                name:'折线',
+                                type:'line',
+                                data:function (){
+                                    var list = [];
+                                    for (var i = 1; i <= 30; i++) {
+                                        list.push(Math.round(Math.random()* 30));
+                                    }
+                                    return list;
+                                }()
+                            }
+                        ]
+                    };
+
+                    //为ECHARTS对象加载数据
+                    myChart.setOption(option);
+                }
+        );
+    </script>
+</body>
+</html>

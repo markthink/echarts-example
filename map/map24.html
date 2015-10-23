@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>搭配时间轴</title>
+</head>
+<body>
+    <!--为ECHARTS准备一个具备大小的DOM -->
+    <div id="main" style="height:400px"></div>
+    <!-- ECHARTS单文件引入 -->
+    <script src="../../echarts/build/dist/echarts.js"></script>
+    <script src="../../echarts/doc/example/timelineOption.js"></script>
+    <script>
+        //路径配置
+        require.config({
+            paths: {
+                echarts: '../../echarts/build/dist'
+            }
+        });
+        //使用
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/line',
+                    'echarts/chart/bar',//使用柱状图就加载BAR模块 按需加载
+                    'echarts/chart/scatter',
+                    'echarts/chart/k',
+                    'echarts/chart/pie',
+                    'echarts/chart/radar',
+                    'echarts/chart/force',
+                    'echarts/chart/chord',
+                    'echarts/chart/gauge',
+                    'echarts/chart/funnel',
+                    'echarts/chart/eventRiver',
+                    'echarts/chart/venn',
+                    'echarts/chart/treemap',
+                    'echarts/chart/tree',
+                    'echarts/chart/wordCloud',
+                    'echarts/chart/heatmap',                    
+                    'echarts/chart/map'
+                ],
+                function(ec){
+                    //基于准备好的DOM 初始化ECHARTS图表
+                    var myChart = ec.init(document.getElementById('main'));
+
+                    var option = {
+                        timeline:{
+                            data:[
+                                '2002-01-01','2003-01-01','2004-01-01','2005-01-01','2006-01-01',
+                                '2007-01-01','2008-01-01','2009-01-01','2010-01-01','2011-01-01'
+                            ],
+                            label : {
+                                formatter : function(s) {
+                                    return s.slice(0, 4);
+                                }
+                            },
+                            autoPlay : true,
+                            playInterval : 1000
+                        },
+                        options:[
+                            {
+                                title : {
+                                    'text':'2002全国宏观经济指标',
+                                    'subtext':'数据来自国家统计局'
+                                },
+                                tooltip : {'trigger':'item'},
+                                toolbox : {
+                                    'show':true,
+                                    'feature':{
+                                        'mark':{'show':true},
+                                        'dataView':{'show':true,'readOnly':false},
+                                        'restore':{'show':true},
+                                        'saveAsImage':{'show':true}
+                                    }
+                                },
+                                dataRange: {
+                                    min: 0,
+                                    max : 53000,
+                                    text:['高','低'],           // 文本，默认为数值文本
+                                    calculable : true,
+                                    x: 'left',
+                                    color: ['orangered','yellow','lightskyblue']
+                                },
+                                series : [
+                                    {
+                                        'name':'GDP',
+                                        'type':'map',
+                                        'data': dataMap.dataGDP['2002']
+                                    }
+                                ]
+                            },
+                            {
+                                title : {'text':'2003全国宏观经济指标'},
+                                series : [
+                                    {'data': dataMap.dataGDP['2003']}
+                                ]
+                            },
+                            {
+                                title : {'text':'2004全国宏观经济指标'},
+                                series : [
+                                    {'data': dataMap.dataGDP['2004']}
+                                ]
+                            },
+                            {
+                                title : {'text':'2005全国宏观经济指标'},
+                                series : [
+                                    {'data': dataMap.dataGDP['2005']}
+                                ]
+                            },
+                            {
+                                title : {'text':'2006全国宏观经济指标'},
+                                series : [
+                                    {'data': dataMap.dataGDP['2006']}
+                                ]
+                            },
+                            {
+                                title : {'text':'2007全国宏观经济指标'},
+                                series : [
+                                    {'data': dataMap.dataGDP['2007']}
+                                ]
+                            },
+                            {
+                                title : {'text':'2008全国宏观经济指标'},
+                                series : [
+                                    {'data': dataMap.dataGDP['2008']}
+                                ]
+                            },
+                            {
+                                title : {'text':'2009全国宏观经济指标'},
+                                series : [
+                                    {'data': dataMap.dataGDP['2009']}
+                                ]
+                            },
+                            {
+                                title : {'text':'2010全国宏观经济指标'},
+                                series : [
+                                    {'data': dataMap.dataGDP['2010']}
+                                ]
+                            },
+                            {
+                                title : {'text':'2011全国宏观经济指标'},
+                                series : [
+                                    {'data': dataMap.dataGDP['2011']}
+                                ]
+                            }
+                        ]
+                    };
+
+                    //为ECHARTS对象加载数据
+                    myChart.setOption(option);
+                }
+        );
+    </script>
+</body>
+</html>

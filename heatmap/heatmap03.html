@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <!--为ECHARTS准备一个具备大小的DOM -->
+    <div id="main" style="height:400px"></div>
+    <!-- ECHARTS单文件引入 -->
+    <script src="../../echarts/build/dist/echarts.js"></script>
+
+    <script>
+        //路径配置
+        require.config({
+            paths: {
+                echarts: '../../echarts/build/dist'
+            }
+        });
+        //使用
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/line',
+                    'echarts/chart/bar',//使用柱状图就加载BAR模块 按需加载
+                    'echarts/chart/scatter',
+                    'echarts/chart/k',
+                    'echarts/chart/pie',
+                    'echarts/chart/radar',
+                    'echarts/chart/force',
+                    'echarts/chart/chord',
+                    'echarts/chart/gauge',
+                    'echarts/chart/funnel',
+                    'echarts/chart/eventRiver',
+                    'echarts/chart/venn',
+                    'echarts/chart/treemap',
+                    'echarts/chart/tree',
+                    'echarts/chart/wordCloud',
+                    'echarts/chart/heatmap',
+                    'echarts/chart/map'
+                ],
+                function(ec){
+                    //基于准备好的DOM 初始化ECHARTS图表
+                    var myChart = ec.init(document.getElementById('main'));
+
+                    var heatData = [];
+                    for (var i = 0; i < 200; ++i) {
+                        heatData.push([
+                            100 + Math.random() * 20,
+                            24 + Math.random() * 16,
+                            Math.random()
+                        ]);
+                    }
+                    for (var j = 0; j < 10; ++j) {
+                        var x = 100 + Math.random() * 16;
+                        var y = 24 + Math.random() * 12;
+                        var cnt = 30 * Math.random();
+                        for (var i = 0; i < cnt; ++i) {
+                            heatData.push([
+                                x + Math.random() * 2,
+                                y + Math.random() * 2,
+                                Math.random()
+                            ]);
+                        }
+                    }
+
+                    option = {
+                        backgroundColor: '#1b1b1b',
+                        title : {
+                            text: '热力图结合地图',
+                            x:'center',
+                            textStyle: {
+                                color: 'white'
+                            }
+                        },
+                        tooltip : {
+                            trigger: 'item',
+                            formatter: '{b}'
+                        },
+                        toolbox: {
+                            show : true,
+                            orient : 'vertical',
+                            x: 'right',
+                            y: 'center',
+                            feature : {
+                                mark : {show: true},
+                                dataView : {show: true, readOnly: false},
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+                        series : [
+                            {
+                                name: '北京',
+                                type: 'map',
+                                mapType: 'china',
+                                roam: true,
+                                hoverable: false,
+                                data:[],
+                                heatmap: {
+                                    minAlpha: 0.1,
+                                    data: heatData
+                                },
+                                itemStyle: {
+                                    normal: {
+                                        borderColor:'rgba(100,149,237,0.6)',
+                                        borderWidth:0.5,
+                                        areaStyle: {
+                                            color: '#1b1b1b'
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    };
+
+                    //为ECHARTS对象加载数据
+                    myChart.setOption(option);
+                }
+        );
+    </script>
+</body>
+</html>

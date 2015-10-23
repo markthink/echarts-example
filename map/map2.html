@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>标准地图</title>
+</head>
+<body>
+    <!--为ECHARTS准备一个具备大小的DOM -->
+    <div id="main" style="height:400px"></div>
+    <!-- ECHARTS单文件引入 -->
+    <script src="../../echarts/build/dist/echarts.js"></script>
+
+    <script>
+        //路径配置
+        require.config({
+            paths: {
+                echarts: '../../echarts/build/dist'
+            }
+        });
+        //使用
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/line',
+                    'echarts/chart/bar',//使用柱状图就加载BAR模块 按需加载
+                    'echarts/chart/scatter',
+                    'echarts/chart/k',
+                    'echarts/chart/pie',
+                    'echarts/chart/radar',
+                    'echarts/chart/force',
+                    'echarts/chart/chord',
+                    'echarts/chart/gauge',
+                    'echarts/chart/funnel',
+                    'echarts/chart/eventRiver',
+                    'echarts/chart/venn',
+                    'echarts/chart/treemap',
+                    'echarts/chart/tree',
+                    'echarts/chart/wordCloud',
+                    'echarts/chart/heatmap',
+                    'echarts/chart/map'
+                ],
+                function(ec){
+                    //基于准备好的DOM 初始化ECHARTS图表
+                    var myChart = ec.init(document.getElementById('main'));
+
+                    var option = {
+                        tooltip : {
+                            trigger: 'item',
+                            formatter: '{b}'
+                        },
+                        series : [
+                            {
+                                name: '中国',
+                                type: 'map',
+                                mapType: 'china',
+                                selectedMode : 'multiple',
+                                itemStyle:{
+                                    normal:{label:{show:true}},
+                                    emphasis:{label:{show:true}}
+                                },
+                                data:[
+                                    {name:'广东',selected:true}
+                                ]
+                            }
+                        ]
+                    };
+                    var ecConfig = require('echarts/config');
+                    myChart.on(ecConfig.EVENT.MAP_SELECTED, function (param){
+                        var selected = param.selected;
+                        var str = '当前选择： ';
+                        for (var p in selected) {
+                            if (selected[p]) {
+                                str += p + ' ';
+                            }
+                        }
+                        document.getElementById('wrong-message').innerHTML = str;
+                    })
+
+                    //为ECHARTS对象加载数据
+                    myChart.setOption(option);
+                }
+        );
+    </script>
+</body>
+</html>

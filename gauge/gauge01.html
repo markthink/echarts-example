@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>标准仪表盘</title>
+</head>
+<body>
+    <!--为ECHARTS准备一个具备大小的DOM -->
+    <div id="main" style="height:400px"></div>
+    <!-- ECHARTS单文件引入 -->
+    <script src="../../echarts/build/dist/echarts.js"></script>
+
+    <script>
+        //路径配置
+        require.config({
+            paths: {
+                echarts: '../../echarts/build/dist'
+            }
+        });
+        //使用
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/line',
+                    'echarts/chart/bar',//使用柱状图就加载BAR模块 按需加载
+                    'echarts/chart/scatter',
+                    'echarts/chart/k',
+                    'echarts/chart/pie',
+                    'echarts/chart/radar',
+                    'echarts/chart/force',
+                    'echarts/chart/chord',
+                    'echarts/chart/gauge',
+                    'echarts/chart/funnel',
+                    'echarts/chart/eventRiver',
+                    'echarts/chart/venn',
+                    'echarts/chart/treemap',
+                    'echarts/chart/tree',
+                    'echarts/chart/wordCloud',
+                    'echarts/chart/heatmap'
+                ],
+                function(ec){
+                    //基于准备好的DOM 初始化ECHARTS图表
+                    var myChart = ec.init(document.getElementById('main'));
+
+                    var option = {
+                        tooltip : {
+                            formatter: "{a} <br/>{b} : {c}%"
+                        },
+                        toolbox: {
+                            show : true,
+                            feature : {
+                                mark : {show: true},
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+                        series : [
+                            {
+                                name:'业务指标',
+                                type:'gauge',
+                                detail : {formatter:'{value}%'},
+                                data:[{value: 50, name: '完成率'}]
+                            }
+                        ]
+                    };
+                    var timeTicket;
+                    clearInterval(timeTicket);
+                    timeTicket = setInterval(function (){
+                        option.series[0].data[0].value = (Math.random()*100).toFixed(2) - 0;
+                        myChart.setOption(option, true);
+                    },2000);
+
+                    //为ECHARTS对象加载数据
+                    myChart.setOption(option);
+                }
+        );
+    </script>
+</body>
+</html>

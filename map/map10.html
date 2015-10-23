@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>地图扩展</title>
+</head>
+<body>
+    <!--为ECHARTS准备一个具备大小的DOM -->
+    <div id="main" style="height:400px"></div>
+    <!-- ECHARTS单文件引入 -->
+    <script src="../../echarts/build/dist/echarts.js"></script>
+    <script src="../../echarts/doc/asset/js/jquery.min.js"></script>
+    <script>
+        //路径配置
+        require.config({
+            paths: {
+                echarts: '../../echarts/build/dist'
+            }
+        });
+        //使用
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/line',
+                    'echarts/chart/bar',//使用柱状图就加载BAR模块 按需加载
+                    'echarts/chart/scatter',
+                    'echarts/chart/k',
+                    'echarts/chart/pie',
+                    'echarts/chart/radar',
+                    'echarts/chart/force',
+                    'echarts/chart/chord',
+                    'echarts/chart/gauge',
+                    'echarts/chart/funnel',
+                    'echarts/chart/eventRiver',
+                    'echarts/chart/venn',
+                    'echarts/chart/treemap',
+                    'echarts/chart/tree',
+                    'echarts/chart/wordCloud',
+                    'echarts/chart/heatmap',
+                    'echarts/chart/map'
+                ],
+                function(ec){
+                    //基于准备好的DOM 初始化ECHARTS图表
+                    var myChart = ec.init(document.getElementById('main'));
+
+                    // 自定义扩展图表类型：mapType = continent 大洲地图
+                    require('echarts/util/mapData/params').params.continent = {
+                        getGeoJson: function (callback) {
+                            $.getJSON('../../echarts/doc/example/geoJson/continent_geo.json',callback);
+                        }
+                    }
+                    option = {
+                        title : {
+                            text : '金棕榈 智慧旅行@云数据',
+                            subtext: 'by 江江的喵',
+                            link: 'http://www.palmyou.com/',
+                            sublink: 'http://weibo.com/u/2813464944'
+                        },
+                        tooltip : {
+                            trigger: 'item',
+                            formatter: function (params){
+                                var value = params.value + '万人次 （' + (params.value/98.19).toFixed(2) + '%）';
+                                return params.seriesName + '<br/>' + params.name + ' : ' + value;
+                            }
+                        },
+                        toolbox: {
+                            show : true,
+                            orient : 'vertical',
+                            x: 'right',
+                            y: 'center',
+                            feature : {
+                                mark : {show: true},
+                                dataView : {show: true, readOnly: false},
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+                        dataRange: {
+                            min: 0,
+                            max: 1000,
+                            text:['热', '冷'],
+                            splitNumber:0,
+                            color: ['orangered','yellow','lightskyblue']
+                        },
+                        series : [
+                            {
+                                name: '2013年出境目的地（洲际统计）',
+                                type: 'map',
+                                mapType: 'continent', // 自定义扩展图表类型
+                                itemStyle:{
+                                    normal:{label:{show:true}},
+                                    emphasis:{label:{show:true}}
+                                },
+                                data:[
+                                    {name: '亚洲', value: 8967.69},
+                                    {name: '大洋洲', value: 592.09},
+                                    {name: '欧洲', value: 183.62},
+                                    {name: '北美洲', value: 41.63},
+                                    {name: '南美洲', value: 10.41},
+                                    {name: '非洲', value: 22.5837}
+                                ],
+                                // 文本位置修正
+                                textFixed : {
+                                    '大洋洲' : [265, 0],
+                                    '非洲' : [10, -30],
+                                    '北美洲' : [20, 0],
+                                    '南美洲' : [0, -10],
+                                    '亚洲' : [20, -30],
+                                    '欧洲' : [200, -10],
+                                }
+                            }
+                        ]
+                    };
+
+                    //为ECHARTS对象加载数据
+                    myChart.setOption(option);
+                }
+        );
+    </script>
+</body>
+</html>

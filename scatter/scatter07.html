@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>搭配值域漫游</title>
+</head>
+<body>
+    <!--为ECHARTS准备一个具备大小的DOM -->
+    <div id="main" style="height:400px"></div>
+    <!-- ECHARTS单文件引入 -->
+    <script src="../../echarts/build/dist/echarts.js"></script>
+
+    <script>
+        //路径配置
+        require.config({
+            paths: {
+                echarts: '../../echarts/build/dist'
+            }
+        });
+        //使用
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/line',
+                    'echarts/chart/bar',//使用柱状图就加载BAR模块 按需加载
+                    'echarts/chart/scatter',
+                    'echarts/chart/k',
+                    'echarts/chart/pie',
+                    'echarts/chart/radar',
+                    'echarts/chart/force',
+                    'echarts/chart/chord',
+                    'echarts/chart/gauge',
+                    'echarts/chart/funnel',
+                    'echarts/chart/eventRiver',
+                    'echarts/chart/venn',
+                    'echarts/chart/treemap',
+                    'echarts/chart/tree',
+                    'echarts/chart/wordCloud',
+                    'echarts/chart/heatmap'
+                ],
+                function(ec){
+                    //基于准备好的DOM 初始化ECHARTS图表
+                    var myChart = ec.init(document.getElementById('main'));
+
+                    var option = {
+                        tooltip : {
+                            trigger: 'item'
+                        },
+                        toolbox: {
+                            show : true,
+                            feature : {
+                                mark : {show: true},
+                                dataZoom : {show: true},
+                                dataView : {show: true, readOnly: false},
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+                        dataRange: {
+                            min: 0,
+                            max: 100,
+                            y: 'center',
+                            text:['高','低'],           // 文本，默认为数值文本
+                            color:['lightgreen','yellow'],
+                            calculable : true
+                        },
+                        xAxis : [
+                            {
+                                type : 'value',
+                                scale : true
+                            }
+                        ],
+                        yAxis : [
+                            {
+                                type : 'value',
+                                position:'right',
+                                scale : true
+                            }
+                        ],
+                        animation: false,
+                        series : [
+                            {
+                                name:'scatter1',
+                                type:'scatter',
+                                symbolSize:5,
+                                data: (function () {
+                                    var d = [];
+                                    var len = 500;
+                                    var value;
+                                    while (len--) {
+                                        value = (Math.random()*100).toFixed(2) - 0;
+                                        d.push([
+                                            (Math.random()*value + value).toFixed(2) - 0,
+                                            (Math.random()*value).toFixed(2) - 0,
+                                            value
+                                        ]);
+                                    }
+                                    return d;
+                                })()
+                            }
+                        ]
+                    };
+
+                    //为ECHARTS对象加载数据
+                    myChart.setOption(option);
+                }
+        );
+    </script>
+</body>
+</html>

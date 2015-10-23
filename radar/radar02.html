@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>标准填充雷达图</title>
+</head>
+<body>
+    <!--为ECHARTS准备一个具备大小的DOM -->
+    <div id="main" style="height:400px"></div>
+    <!-- ECHARTS单文件引入 -->
+    <script src="../../echarts/build/dist/echarts.js"></script>
+
+    <script>
+        //路径配置
+        require.config({
+            paths: {
+                echarts: '../../echarts/build/dist'
+            }
+        });
+        //使用
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/line',
+                    'echarts/chart/bar',//使用柱状图就加载BAR模块 按需加载
+                    'echarts/chart/scatter',
+                    'echarts/chart/k',
+                    'echarts/chart/pie',
+                    'echarts/chart/radar',
+                    'echarts/chart/force',
+                    'echarts/chart/chord',
+                    'echarts/chart/gauge',
+                    'echarts/chart/funnel',
+                    'echarts/chart/eventRiver',
+                    'echarts/chart/venn',
+                    'echarts/chart/treemap',
+                    'echarts/chart/tree',
+                    'echarts/chart/wordCloud',
+                    'echarts/chart/heatmap'
+                ],
+                function(ec){
+                    //基于准备好的DOM 初始化ECHARTS图表
+                    var myChart = ec.init(document.getElementById('main'));
+
+                    var option = {
+                        title : {
+                            text: '罗纳尔多 vs 舍普琴科',
+                            subtext: '完全实况球员数据'
+                        },
+                        tooltip : {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            x : 'center',
+                            data:['罗纳尔多','舍普琴科']
+                        },
+                        toolbox: {
+                            show : true,
+                            feature : {
+                                mark : {show: true},
+                                dataView : {show: true, readOnly: false},
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+                        calculable : true,
+                        polar : [
+                            {
+                                indicator : [
+                                    {text : '进攻', max  : 100},
+                                    {text : '防守', max  : 100},
+                                    {text : '体能', max  : 100},
+                                    {text : '速度', max  : 100},
+                                    {text : '力量', max  : 100},
+                                    {text : '技巧', max  : 100}
+                                ],
+                                radius : 130
+                            }
+                        ],
+                        series : [
+                            {
+                                name: '完全实况球员数据',
+                                type: 'radar',
+                                itemStyle: {
+                                    normal: {
+                                        areaStyle: {
+                                            type: 'default'
+                                        }
+                                    }
+                                },
+                                data : [
+                                    {
+                                        value : [97, 42, 88, 94, 90, 86],
+                                        name : '舍普琴科'
+                                    },
+                                    {
+                                        value : [97, 32, 74, 95, 88, 92],
+                                        name : '罗纳尔多'
+                                    }
+                                ]
+                            }
+                        ]
+                    };
+
+                    //为ECHARTS对象加载数据
+                    myChart.setOption(option);
+                }
+        );
+    </script>
+</body>
+</html>

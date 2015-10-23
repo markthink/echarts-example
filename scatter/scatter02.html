@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>标准气泡图</title>
+</head>
+<body>
+    <!--为ECHARTS准备一个具备大小的DOM -->
+    <div id="main" style="height:400px"></div>
+    <!-- ECHARTS单文件引入 -->
+    <script src="../../echarts/build/dist/echarts.js"></script>
+
+    <script>
+        //路径配置
+        require.config({
+            paths: {
+                echarts: '../../echarts/build/dist'
+            }
+        });
+        //使用
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/line',
+                    'echarts/chart/bar',//使用柱状图就加载BAR模块 按需加载
+                    'echarts/chart/scatter',
+                    'echarts/chart/k',
+                    'echarts/chart/pie',
+                    'echarts/chart/radar',
+                    'echarts/chart/force',
+                    'echarts/chart/chord',
+                    'echarts/chart/gauge',
+                    'echarts/chart/funnel',
+                    'echarts/chart/eventRiver',
+                    'echarts/chart/venn',
+                    'echarts/chart/treemap',
+                    'echarts/chart/tree',
+                    'echarts/chart/wordCloud',
+                    'echarts/chart/heatmap'
+                ],
+                function(ec){
+                    //基于准备好的DOM 初始化ECHARTS图表
+                    var myChart = ec.init(document.getElementById('main'));
+
+                    function random(){
+                        var r = Math.round(Math.random() * 100);
+                        return (r * (r % 2 == 0 ? 1 : -1));
+                    }
+
+                    function randomDataArray() {
+                        var d = [];
+                        var len = 100;
+                        while (len--) {
+                            d.push([
+                                random(),
+                                random(),
+                                Math.abs(random()),
+                            ]);
+                        }
+                        return d;
+                    }
+
+                    option = {
+                        tooltip : {
+                            trigger: 'axis',
+                            showDelay : 0,
+                            axisPointer:{
+                                show: true,
+                                type : 'cross',
+                                lineStyle: {
+                                    type : 'dashed',
+                                    width : 1
+                                }
+                            }
+                        },
+                        legend: {
+                            data:['scatter1','scatter2']
+                        },
+                        toolbox: {
+                            show : true,
+                            feature : {
+                                mark : {show: true},
+                                dataZoom : {show: true},
+                                dataView : {show: true, readOnly: false},
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+                        xAxis : [
+                            {
+                                type : 'value',
+                                splitNumber: 4,
+                                scale: true
+                            }
+                        ],
+                        yAxis : [
+                            {
+                                type : 'value',
+                                splitNumber: 4,
+                                scale: true
+                            }
+                        ],
+                        series : [
+                            {
+                                name:'scatter1',
+                                type:'scatter',
+                                symbolSize: function (value){
+                                    return Math.round(value[2] / 5);
+                                },
+                                data: randomDataArray()
+                            },
+                            {
+                                name:'scatter2',
+                                type:'scatter',
+                                symbolSize: function (value){
+                                    return Math.round(value[2] / 5);
+                                },
+                                data: randomDataArray()
+                            }
+                        ]
+                    };
+
+                    //为ECHARTS对象加载数据
+                    myChart.setOption(option);
+                }
+        );
+    </script>
+</body>
+</html>

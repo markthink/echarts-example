@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>数据区域控件</title>
+</head>
+<body>
+    <!--为ECHARTS准备一个具备大小的DOM -->
+    <div id="main" style="height:400px"></div>
+    <!-- ECHARTS单文件引入 -->
+    <script src="../../echarts/build/dist/echarts.js"></script>
+
+    <script>
+        //路径配置
+        require.config({
+            paths: {
+                echarts: '../../echarts/build/dist'
+            }
+        });
+        //使用
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/line',
+                    'echarts/chart/bar',//使用柱状图就加载BAR模块 按需加载
+                    'echarts/chart/scatter',
+                    'echarts/chart/k',
+                    'echarts/chart/pie',
+                    'echarts/chart/radar',
+                    'echarts/chart/force',
+                    'echarts/chart/chord',
+                    'echarts/chart/gauge',
+                    'echarts/chart/funnel',
+                    'echarts/chart/eventRiver',
+                    'echarts/chart/venn',
+                    'echarts/chart/treemap',
+                    'echarts/chart/tree',
+                    'echarts/chart/wordCloud',
+                    'echarts/chart/heatmap'
+                ],
+                function(ec){
+                    //基于准备好的DOM 初始化ECHARTS图表
+                    var myChart = ec.init(document.getElementById('main'));
+
+                    var option = {
+                        tooltip : {
+                            trigger: 'axis'
+                        },
+                        toolbox: {
+                            show : true,
+                            feature : {
+                                mark : {show: true},
+                                dataZoom : {show: true},
+                                dataView : {show: true},
+                                magicType : {show: true, type: ['line', 'bar']},
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+                        dataZoom : {
+                            show : true,
+                            realtime : true,
+                            //orient: 'vertical',   // 'horizontal'
+                            //x: 0,
+                            y: 36,
+                            //width: 400,
+                            height: 20,
+                            //backgroundColor: 'rgba(221,160,221,0.5)',
+                            //dataBackgroundColor: 'rgba(138,43,226,0.5)',
+                            //fillerColor: 'rgba(38,143,26,0.6)',
+                            //handleColor: 'rgba(128,43,16,0.8)',
+                            //xAxisIndex:[],
+                            //yAxisIndex:[],
+                            start : 40,
+                            end : 60
+                        },
+                        xAxis : [
+                            {
+                                type : 'category',
+                                boundaryGap : false,
+                                data : function (){
+                                    var list = [];
+                                    var n = 0;
+                                    while (n++ < 150) {
+                                        list.push(n);
+                                    }
+                                    return list;
+                                }()
+                            }
+                        ],
+                        yAxis : [
+                            {
+                                type : 'value'
+                            }
+                        ],
+                        series : [
+                            {
+                                name:'dz',
+                                type:'line',
+                                data:function (){
+                                    var list = [];
+                                    for (var i = 1; i <= 150; i++) {
+                                        list.push(Math.round(Math.random()* 30));
+                                    }
+                                    return list;
+                                }()
+                            }
+                        ],
+                        calculable:false
+                    };
+
+                    //为ECHARTS对象加载数据
+                    myChart.setOption(option);
+                }
+        );
+    </script>
+</body>
+</html>

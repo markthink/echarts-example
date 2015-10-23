@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>散饼图</title>
+</head>
+<body>
+    <!--为ECHARTS准备一个具备大小的DOM -->
+    <div id="main" style="height:400px"></div>
+    <!-- ECHARTS单文件引入 -->
+    <script src="../../echarts/build/dist/echarts.js"></script>
+
+    <script>
+        //路径配置
+        require.config({
+            paths: {
+                echarts: '../../echarts/build/dist'
+            }
+        });
+        //使用
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/line',
+                    'echarts/chart/bar',//使用柱状图就加载BAR模块 按需加载
+                    'echarts/chart/scatter',
+                    'echarts/chart/k',
+                    'echarts/chart/pie',
+                    'echarts/chart/radar',
+                    'echarts/chart/force',
+                    'echarts/chart/chord',
+                    'echarts/chart/gauge',
+                    'echarts/chart/funnel',
+                    'echarts/chart/eventRiver',
+                    'echarts/chart/venn',
+                    'echarts/chart/treemap',
+                    'echarts/chart/tree',
+                    'echarts/chart/wordCloud',
+                    'echarts/chart/heatmap'
+                ],
+                function(ec){
+                    //基于准备好的DOM 初始化ECHARTS图表
+                    var myChart = ec.init(document.getElementById('main'));
+
+                    // 虚拟构造同横纵坐标的两组数据
+                    var sData1 = (function () {
+                        var d = [];
+                        var len = 40;
+                        var value;
+                        while (len--) {
+                            d.push([
+                                Math.round(Math.random()*10) * (Math.round(Math.random()*10) > 5 ? 1 : -1),
+                                Math.round(Math.random()*10) * (Math.round(Math.random()*10) > 5 ? 1 : -1),
+                                Math.round(Math.random()*20)
+                            ]);
+                        }
+                        return d;
+                    })();
+                    var sData2 = (function () {
+                        var d = [];
+                        var len = sData1.length;
+                        for (var i = 0; i < len; i++) {
+                            d.push([
+                                sData1[i][0],
+                                sData1[i][1],
+                                Math.round(Math.random()*15)
+                            ]);
+                        }
+                        return d;
+                    })();
+
+                    var option = {
+                        color : ['rgba(255, 69, 0, 0.5)', 'rgba(30, 144, 255, 0.5)'],
+                        title : {
+                            text: '饼图代替散点',
+                            subtext : '混搭'
+                        },
+                        tooltip : {
+                            trigger: 'item',
+                            formatter: "{b} : {c} ({d}%)"
+                        },
+                        toolbox: {
+                            show : true,
+                            feature : {
+                                mark : {show: true},
+                                dataView : {show: true, readOnly: false},
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+                        xAxis : [
+                            {
+                                type : 'value',
+                                splitNumber: 2
+                            }
+                        ],
+                        yAxis : [
+                            {
+                                type : 'value',
+                                splitNumber: 2
+                            }
+                        ],
+                        animation: false,
+                        series : [
+                            {
+                                type:'scatter',
+                                symbol: 'none',
+                                data: sData1
+                            },
+                            {
+                                type:'scatter',
+                                symbol: 'none',
+                                data: sData2
+                            }
+                        ]
+                    };
+
+                    function buildPieSeries(){
+                        var xAxis = myChart.component.xAxis.getAxis(0);
+                        var yAxis = myChart.component.yAxis.getAxis(0);
+                        var len = sData1.length;
+                        option.series = option.series.slice(0,2);
+                        option.legend = {
+                            data : ['系列1', '系列2']
+                        };
+                        while (len--) {
+                            option.series.push({
+                                type: 'pie',
+                                itemStyle : {
+                                    normal : {
+                                        label : {
+                                            show : false
+                                        },
+                                        labelLine : {
+                                            show : false
+                                        }
+                                    }
+                                },
+                                radius : sData1[len][2] + sData2[len][2],
+                                center: [
+                                    xAxis.getCoord(sData1[len][0]),
+                                    yAxis.getCoord(sData1[len][1])
+                                ],
+                                data: [
+                                    {name: '系列1', value: sData1[len][2]},
+                                    {name: '系列2', value: sData2[len][2]}
+                                ]
+                            })
+                        }
+                        option.animation = true;
+                        myChart.setOption(option, true);
+                        window.onresize = buildPieSeries;
+                    }
+                    // 构造出一系列的饼图代替原来的散点，需要在散点画出来后才能获取到散点的坐标，setTimeout！
+                    setTimeout(buildPieSeries, 100);
+
+                    //为ECHARTS对象加载数据
+                    myChart.setOption(option);
+                }
+        );
+    </script>
+</body>
+</html>

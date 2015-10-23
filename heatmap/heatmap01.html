@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <!--为ECHARTS准备一个具备大小的DOM -->
+    <img src="../../echarts/doc/asset/img/example/heatmap_baidu.png" style="position: absolute;left:0;top:0;height:400px;">
+    <div id="main" style="height:400px"></div>
+    <!-- ECHARTS单文件引入 -->
+    <script src="../../echarts/build/dist/echarts.js"></script>
+
+    <script>
+        //路径配置
+        require.config({
+            paths: {
+                echarts: '../../echarts/build/dist'
+            }
+        });
+        //使用
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/line',
+                    'echarts/chart/bar',//使用柱状图就加载BAR模块 按需加载
+                    'echarts/chart/scatter',
+                    'echarts/chart/k',
+                    'echarts/chart/pie',
+                    'echarts/chart/radar',
+                    'echarts/chart/force',
+                    'echarts/chart/chord',
+                    'echarts/chart/gauge',
+                    'echarts/chart/funnel',
+                    'echarts/chart/eventRiver',
+                    'echarts/chart/venn',
+                    'echarts/chart/treemap',
+                    'echarts/chart/tree',
+                    'echarts/chart/wordCloud',
+                    'echarts/chart/heatmap'
+                ],
+                function(ec){
+                    //基于准备好的DOM 初始化ECHARTS图表
+                    var myChart = ec.init(document.getElementById('main'));
+
+                    var heatData = [];
+                    for (var i = 0; i < 20; ++i) {
+                        heatData.push([
+                            400 + Math.random() * 300,
+                            5 + Math.random() * 10,
+                            Math.random()
+                        ]);
+                    }
+                    for (var i = 0; i < 100; ++i) {
+                        heatData.push([
+                            100 + Math.random() * 600,
+                            150 + Math.random() * 50,
+                            Math.random()
+                        ]);
+                    }
+                    for (var i = 0; i < 200; ++i) {
+                        heatData.push([
+                            Math.random() * 1000,
+                            Math.random() * 800,
+                            Math.random() * 0.5
+                        ]);
+                    }
+                    option = {
+                        title : {
+                            text: '热力图自定义样式'
+                        },
+                        series : [
+                            {
+                                type : 'heatmap',
+                                data : heatData,
+                                hoverable : false,
+                                gradientColors: [{
+                                    offset: 0.4,
+                                    color: 'green'
+                                }, {
+                                    offset: 0.5,
+                                    color: 'yellow'
+                                }, {
+                                    offset: 0.8,
+                                    color: 'orange'
+                                }, {
+                                    offset: 1,
+                                    color: 'red'
+                                }],
+                                minAlpha: 0.2,
+                                valueScale: 2,
+                                opacity: 0.6
+                            }
+                        ]
+                    };
+
+                    //为ECHARTS对象加载数据
+                    myChart.setOption(option);
+                }
+        );
+    </script>
+</body>
+</html>

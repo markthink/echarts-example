@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>类目散点图</title>
+</head>
+<body>
+    <!--为ECHARTS准备一个具备大小的DOM -->
+    <div id="main" style="height:400px"></div>
+    <!-- ECHARTS单文件引入 -->
+    <script src="../../echarts/build/dist/echarts.js"></script>
+
+    <script>
+        //路径配置
+        require.config({
+            paths: {
+                echarts: '../../echarts/build/dist'
+            }
+        });
+        //使用
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/line',
+                    'echarts/chart/bar',//使用柱状图就加载BAR模块 按需加载
+                    'echarts/chart/scatter',
+                    'echarts/chart/k',
+                    'echarts/chart/pie',
+                    'echarts/chart/radar',
+                    'echarts/chart/force',
+                    'echarts/chart/chord',
+                    'echarts/chart/gauge',
+                    'echarts/chart/funnel',
+                    'echarts/chart/eventRiver',
+                    'echarts/chart/venn',
+                    'echarts/chart/treemap',
+                    'echarts/chart/tree',
+                    'echarts/chart/wordCloud',
+                    'echarts/chart/heatmap'
+                ],
+                function(ec){
+                    //基于准备好的DOM 初始化ECHARTS图表
+                    var myChart = ec.init(document.getElementById('main'));
+
+                    var option = {
+                        title : {
+                            text : '类目坐标散点图',
+                            subtext : 'dataZoom支持'
+                        },
+                        tooltip : {
+                            trigger: 'axis',
+                            axisPointer:{
+                                show: true,
+                                type : 'cross',
+                                lineStyle: {
+                                    type : 'dashed',
+                                    width : 1
+                                }
+                            }
+                        },
+                        toolbox: {
+                            show : true,
+                            feature : {
+                                mark : {show: true},
+                                dataView : {show: true, readOnly: false},
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+                        dataZoom: {
+                            show: true,
+                            start : 30,
+                            end : 70
+                        },
+                        legend : {
+                            data : ['series1', 'series2']
+                        },
+                        dataRange: {
+                            min: 0,
+                            max: 100,
+                            orient: 'horizontal',
+                            y: 30,
+                            x: 'center',
+                            //text:['高','低'],           // 文本，默认为数值文本
+                            color:['lightgreen','orange'],
+                            splitNumber: 5
+                        },
+                        xAxis : [
+                            {
+                                type : 'category',
+                                axisLabel: {
+                                    formatter : function(v) {
+                                        return '类目' + v
+                                    }
+                                },
+                                data : function (){
+                                    var list = [];
+                                    var len = 0;
+                                    while (len++ < 500) {
+                                        list.push(len);
+                                    }
+                                    return list;
+                                }()
+                            }
+                        ],
+                        yAxis : [
+                            {
+                                type : 'value'
+                            }
+                        ],
+                        animation: false,
+                        series : [
+                            {
+                                name:'series1',
+                                type:'scatter',
+                                tooltip : {
+                                    trigger: 'item',
+                                    formatter : function (params) {
+                                        return params.seriesName + ' （'  + '类目' + params.value[0] + '）<br/>'
+                                                + params.value[1] + ', '
+                                                + params.value[2];
+                                    },
+                                    axisPointer:{
+                                        show: true
+                                    }
+                                },
+                                symbolSize: function (value){
+                                    return Math.round(value[2]/10);
+                                },
+                                data: (function () {
+                                    var d = [];
+                                    var len = 0;
+                                    var value;
+                                    while (len++ < 500) {
+                                        d.push([
+                                            len,
+                                            (Math.random()*30).toFixed(2) - 0,
+                                            (Math.random()*100).toFixed(2) - 0
+                                        ]);
+                                    }
+                                    return d;
+                                })()
+                            },
+                            {
+                                name:'series2',
+                                type:'scatter',
+                                tooltip : {
+                                    trigger: 'item',
+                                    formatter : function (params) {
+                                        return params.seriesName + ' （'  + '类目' + params.value[0] + '）<br/>'
+                                                + params.value[1] + ', '
+                                                + params.value[2];
+                                    },
+                                    axisPointer:{
+                                        show: true
+                                    }
+                                },
+                                symbolSize: function (value){
+                                    return Math.round(value[2]/10);
+                                },
+                                data: (function () {
+                                    var d = [];
+                                    var len = 0;
+                                    var value;
+                                    while (len++ < 500) {
+                                        d.push([
+                                            len,
+                                            (Math.random()*30).toFixed(2) - 0,
+                                            (Math.random()*100).toFixed(2) - 0
+                                        ]);
+                                    }
+                                    return d;
+                                })()
+                            }
+                        ]
+                    };
+
+                    //为ECHARTS对象加载数据
+                    myChart.setOption(option);
+                }
+        );
+    </script>
+</body>
+</html>

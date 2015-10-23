@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>复杂关系网络</title>
+</head>
+<body>
+    <!--为ECHARTS准备一个具备大小的DOM -->
+    <div id="main" style="height:400px"></div>
+    <!-- ECHARTS单文件引入 -->
+    <script src="../../echarts/build/dist/echarts.js"></script>
+    <script src="../../echarts/doc/asset/js/jquery.min.js"></script>
+    <script>
+        //路径配置
+        require.config({
+            paths: {
+                echarts: '../../echarts/build/dist'
+            }
+        });
+        //使用
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/line',
+                    'echarts/chart/bar',//使用柱状图就加载BAR模块 按需加载
+                    'echarts/chart/scatter',
+                    'echarts/chart/k',
+                    'echarts/chart/pie',
+                    'echarts/chart/radar',
+                    'echarts/chart/force',
+                    'echarts/chart/chord',
+                    'echarts/chart/gauge',
+                    'echarts/chart/funnel',
+                    'echarts/chart/eventRiver',
+                    'echarts/chart/venn',
+                    'echarts/chart/treemap',
+                    'echarts/chart/tree',
+                    'echarts/chart/wordCloud',
+                    'echarts/chart/heatmap'
+                ],
+                function(ec){
+                    //基于准备好的DOM 初始化ECHARTS图表
+                    var myChart = ec.init(document.getElementById('main'));
+
+                    var
+                            option = {
+                                title : {
+                                    text: 'webkit内核依赖',
+                                    subtext: '数据来自网络',
+                                    x:'right',
+                                    y:'bottom'
+                                },
+                                tooltip : {
+                                    trigger: 'item',
+                                    formatter : "{b}"
+                                },
+                                toolbox: {
+                                    show : true,
+                                    feature : {
+                                        restore : {show: true},
+                                        magicType: {
+                                            show: true,
+                                            type: ['force', 'chord'],
+                                            option: {
+                                                chord: {
+                                                    minRadius : 2,
+                                                    maxRadius : 10,
+                                                    ribbonType: false,
+                                                    itemStyle: {
+                                                        normal: {
+                                                            label: {
+                                                                show: true,
+                                                                rotate: true
+                                                            },
+                                                            chordStyle: {
+                                                                opacity: 0.2
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                force: {
+                                                    minRadius : 5,
+                                                    maxRadius : 8,
+                                                    itemStyle : {
+                                                        normal : {
+                                                            label: {
+                                                                show: false
+                                                            },
+                                                            linkStyle : {
+                                                                opacity : 0.5
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        saveAsImage : {show: true}
+                                    }
+                                },
+                                legend : {
+                                    data : ['HTMLElement', 'WebGL', 'SVG', 'CSS', 'Other'],
+                                    orient : 'vertical',
+                                    x : 'left'
+                                },
+                                noDataEffect: 'none',
+                                series :[{
+                                    //FIXME No data
+                                    type: 'force',
+                                }],
+                            };
+                    $.ajax({
+                        url: '../../echarts/doc/example/data/webkit-dep.json',
+                        dataType: 'json',
+                        success: function (data) {
+                            option.series[0] = {
+                                type: 'force',
+                                name: 'webkit-dep',
+                                itemStyle: {
+                                    normal : {
+                                        linkStyle : {
+                                            opacity : 0.5
+                                        }
+                                    }
+                                },
+                                categories: data.categories,
+                                nodes: data.nodes,
+                                links: data.links,
+                                minRadius: 5,
+                                maxRadius: 8,
+                                gravity: 1.1,
+                                scaling: 1.1,
+                                steps: 20,
+                                large: true,
+                                useWorker: true,
+                                coolDown: 0.995,
+                                ribbonType: false
+                            };
+
+                            myChart.setOption(option);
+                            myChart.hideLoading();
+                        }
+                    });
+
+                    //为ECHARTS对象加载数据
+                    myChart.setOption(option);
+                }
+        );
+    </script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>地图扩展</title>
+</head>
+<body>
+    <!--为ECHARTS准备一个具备大小的DOM -->
+    <div id="main" style="height:400px"></div>
+    <!-- ECHARTS单文件引入 -->
+    <script src="../../echarts/build/dist/echarts.js"></script>
+    <script src="../../echarts/doc/asset/js/jquery.min.js"></script>
+    <script>
+        //路径配置
+        require.config({
+            paths: {
+                echarts: '../../echarts/build/dist'
+            }
+        });
+        //使用
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/line',
+                    'echarts/chart/bar',//使用柱状图就加载BAR模块 按需加载
+                    'echarts/chart/scatter',
+                    'echarts/chart/k',
+                    'echarts/chart/pie',
+                    'echarts/chart/radar',
+                    'echarts/chart/force',
+                    'echarts/chart/chord',
+                    'echarts/chart/gauge',
+                    'echarts/chart/funnel',
+                    'echarts/chart/eventRiver',
+                    'echarts/chart/venn',
+                    'echarts/chart/treemap',
+                    'echarts/chart/tree',
+                    'echarts/chart/wordCloud',
+                    'echarts/chart/heatmap',
+                    'echarts/chart/map'
+                ],
+                function(ec){
+                    //基于准备好的DOM 初始化ECHARTS图表
+                    var myChart = ec.init(document.getElementById('main'));
+
+                    // 自定义扩展图表类型：mapType = body
+                    require('echarts/util/mapData/params').params.football = {
+                        getGeoJson: function (callback) {
+                            $.ajax({
+                                url: "../../echarts/doc/example/svg/football.svg",
+                                dataType: 'xml',
+                                success: function(xml) {
+                                    callback(xml)
+                                }
+                            });
+                        }
+                    }
+                    option = {
+                        backgroundColor:'#228b22',
+                        title : {
+                            text : '2014世界杯',
+                            subtext: '地图SVG扩展',
+                            textStyle: {
+                                color: '#fff'
+                            }
+                        },
+                        tooltip : {
+                            trigger: 'item'
+                        },
+                        toolbox: {
+                            show : true,
+                            feature : {
+                                mark : {show: true},
+                                dataView : {show: true, readOnly: false},
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+                        series : [
+                            {
+                                name: '2014世界杯',
+                                type: 'map',
+                                mapType: 'football', // 自定义扩展图表类型
+                                roam:true,
+                                itemStyle:{
+                                    normal:{label:{show:true}},
+                                    emphasis:{label:{show:true}}
+                                },
+                                data:[
+                                    {name: '草地', hoverable: false, itemStyle:{normal:{label:{show:false}}}}
+                                ],
+                                textFixed : {
+                                    '球门区1' : [0, -20],
+                                    '球门区2' : [0, -20],
+                                    '禁区1' : [10, 20],
+                                    '禁区2' : [-10, 20],
+                                    '禁区弧线1' : [0, -20],
+                                    '禁区弧线2' : [0, -20],
+                                    '中圈' : [0, -20],
+                                    '开球点' : [0, 20]
+                                },
+                                markPoint : {
+                                    symbol:'circle',
+                                    symbolSize : 20,
+                                    effect : {
+                                        show: true,
+                                        color: 'lime'
+                                    },
+                                    data : [
+                                        {name: '开球点', value: 100, geoCoord:[425.126, 296.913]}
+                                    ]
+                                },
+                                markLine : {
+                                    smooth:true,
+                                    effect : {
+                                        show: true,
+                                        scaleSize: 1,
+                                        period: 20,
+                                        color: '#fff',
+                                        shadowBlur: 5
+                                    },
+                                    itemStyle : {
+                                        normal: {
+                                            borderWidth:1,
+                                            color: 'gold',
+                                            lineStyle: {
+                                                type: 'solid'
+                                            }
+                                        }
+                                    },
+                                    data : [
+                                        [
+                                            {name:'1', geoCoord:[96.879, 186.983]},
+                                            {name:'2', geoCoord:[693.786, 297.939]}
+                                        ],
+                                        [
+                                            {name:'2', geoCoord:[753.373, 186.983]},
+                                            {name:'1', geoCoord:[156.467, 296.913]}
+                                        ]
+                                    ]
+                                }
+                            }
+                        ]
+                    };
+
+                    //为ECHARTS对象加载数据
+                    myChart.setOption(option);
+                }
+        );
+    </script>
+</body>
+</html>

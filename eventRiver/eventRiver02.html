@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>事件河流图</title>
+</head>
+<body>
+    <!--为ECHARTS准备一个具备大小的DOM -->
+    <div id="main" style="height:400px"></div>
+    <!-- ECHARTS单文件引入 -->
+    <script src="../../echarts/build/dist/echarts.js"></script>
+    <script src="../../echarts/doc/example/eventRiver2_data.js"></script>
+    <script>
+        //路径配置
+        require.config({
+            paths: {
+                echarts: '../../echarts/build/dist'
+            }
+        });
+        //使用
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/line',
+                    'echarts/chart/bar',//使用柱状图就加载BAR模块 按需加载
+                    'echarts/chart/scatter',
+                    'echarts/chart/k',
+                    'echarts/chart/pie',
+                    'echarts/chart/radar',
+                    'echarts/chart/force',
+                    'echarts/chart/chord',
+                    'echarts/chart/gauge',
+                    'echarts/chart/funnel',
+                    'echarts/chart/eventRiver',
+                    'echarts/chart/venn',
+                    'echarts/chart/treemap',
+                    'echarts/chart/tree',
+                    'echarts/chart/wordCloud',
+                    'echarts/chart/heatmap'
+                ],
+                function(ec){
+                    //基于准备好的DOM 初始化ECHARTS图表
+                    var myChart = ec.init(document.getElementById('main'));
+
+                    var legendName = [];
+                    for (var i = 0, l = eventRiver2Data.length; i < l; i++) {
+                        legendName.push(eventRiver2Data[i].name);
+                        eventRiver2Data[i].itemStyle = {
+                            normal: {
+                                label: {
+                                    show:false
+                                }
+                            },
+                            emphasis: {
+                                label: {
+                                    show:false
+                                }
+                            }
+                        }
+                    }
+
+                    option = {
+                        title : {
+                            text: 'Event River',
+                            subtext: '纯属虚构'
+                        },
+                        tooltip : {
+                            trigger: 'item',
+                            enterable: true
+                        },
+                        legend: {
+                            data: legendName
+                        },
+                        toolbox: {
+                            show : true,
+                            feature : {
+                                mark : {show: true},
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+                        xAxis : [
+                            {
+                                type : 'time',
+                                boundaryGap: [0.05,0.1]
+                            }
+                        ],
+                        series : eventRiver2Data
+                    };
+
+                    //为ECHARTS对象加载数据
+                    myChart.setOption(option);
+                }
+        );
+    </script>
+</body>
+</html>

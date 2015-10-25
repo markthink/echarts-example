@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>多图联动</title>
+</head>
+<body>
+    <!--为ECHARTS准备一个具备大小的DOM -->
+        <div id="main" style="height:400px"></div>
+        <div id="main2" style='height:400px;'></div>
+    <!-- ECHARTS单文件引入 -->
+    <script src="../../echarts/build/dist/echarts.js"></script>
+
+    <script>
+        var option,myChart;
+        //路径配置
+        require.config({
+            paths: {
+                echarts: '../../echarts/build/dist'
+            }
+        });
+        //使用
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/line',
+                    'echarts/chart/bar',//使用柱状图就加载BAR模块 按需加载
+                    'echarts/chart/scatter',
+                    'echarts/chart/k',
+                    'echarts/chart/pie',
+                    'echarts/chart/radar',
+                    'echarts/chart/force',
+                    'echarts/chart/chord',
+                    'echarts/chart/gauge',
+                    'echarts/chart/funnel',
+                    'echarts/chart/eventRiver',
+                    'echarts/chart/venn',
+                    'echarts/chart/treemap',
+                    'echarts/chart/tree',
+                    'echarts/chart/wordCloud',
+                    'echarts/chart/heatmap'
+                ],
+                function(ec){
+                    //基于准备好的DOM 初始化ECHARTS图表
+                    myChart = ec.init(document.getElementById('main'));
+
+                    option = {
+                        title : {
+                            text: '中国福利彩票-双色球中奖分布图',
+                            subtext: '图表测试',
+                            x:'center'
+                        },
+                        tooltip : {
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                        },
+                        legend: {
+                            orient : 'vertical',
+                            x : 'left',
+                            data:['1号幸运红球','2号幸运红球','3号幸运红球','4号幸运红球','5号幸运红球','6号幸运红球','幸运蓝球']
+                        },
+                        calculable : true,
+                        series : [
+                            {
+                                name:'2015124',
+                                type:'pie',
+                                radius : '55%',
+                                center: ['50%', 225],
+                                data:[
+                                    {value:2, name:'1号幸运红球'},
+                                    {value:3, name:'2号幸运红球'},
+                                    {value:5, name:'3号幸运红球'},
+                                    {value:12, name:'4号幸运红球'},
+                                    {value:18, name:'5号幸运红球'},
+                                    {value:27, name:'6号幸运红球'},
+                                    {value:1, name:'幸运蓝球'}
+                                ]
+                            }
+                        ]
+                    };
+
+
+                    var option2 = {
+                        tooltip : {
+                            trigger: 'axis',
+                            axisPointer : {
+                                type: 'shadow'
+                            }
+                        },
+                        legend: {
+                            data:['1号幸运红球','2号幸运红球','3号幸运红球','4号幸运红球','5号幸运红球','6号幸运红球','幸运蓝球']
+                        },
+                        toolbox: {
+                            show : true,
+                            orient : 'vertical',
+                            y : 'center',
+                            feature : {
+                                mark : {show: true},
+                                magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+                        calculable : true,
+                        xAxis : [
+                            {
+                                type : 'category',
+                                data :[2015124,2015123,2015122,2015121,2015120,2015119,2015118,2015117,2015116,2015115,2015114,2015113,2015112,2015111,2015110,2015109,2015108,2015107,2015106,2015105,2015104,2015103,2015102,2015101,2015100,2015099,2015098,2015097,2015096,2015095,2015094,2015093,2015092,2015091,2015090,2015089,2015088,2015087,2015086,2015085,2015084,2015083,2015082,2015081,2015080,2015079,2015078,2015077,2015076,2015075,2015074,2015073,2015072,2015071,2015070,2015069,2015068,2015067,2015066,2015065,2015064,2015063,2015062,2015061,2015060,2015059,2015058,2015057,2015056,2015055,2015054,2015053,2015052,2015051,2015050,2015049,2015048,2015047,2015046,2015045,2015044,2015043,2015042,2015041,2015040,2015039,2015038,2015037,2015036,2015035,2015034,2015033,2015032,2015031,2015030,2015029,2015028,2015027,2015026,2015025]
+                            }
+                        ],
+                        yAxis : [
+                            {
+                                type : 'value',
+                                splitArea : {show : true}
+                            }
+                        ],
+                        grid: {
+                            x2:40
+                        },
+                        series : [
+                            {
+                                name:'1号幸运红球',
+                                type:'bar',
+                                stack: '总量',
+                                data:[02,05,05,01,16,02,01,04,04,01,04,01,01,08,05,01,02,07,01,09,09,06,07,08,02,06,06,09,06,04,01,01,09,05,10,12,02,09,05,02,15,06,02,13,14,09,03,01,01,06,04,01,01,08,01,01,06,02,05,08,11,01,09,06,01,02,02,09,01,01,01,03,02,04,03,07,13,02,05,01,02,11,09,04,13,01,05,05,04,01,12,03,11,01,08,07,04,05,02,10]
+                            },
+                            {
+                                name:'2号幸运红球',
+                                type:'bar',
+                                stack: '总量',
+                                data:[03,08,07,03,21,08,04,11,06,07,07,05,03,14,07,08,12,14,03,10,18,08,09,16,03,07,09,12,16,15,04,03,15,07,12,14,12,15,06,08,18,07,08,20,17,14,07,06,09,11,07,02,03,18,07,13,15,05,08,10,12,07,14,18,03,06,09,20,07,10,02,07,04,10,09,12,16,03,07,05,03,12,10,09,16,13,06,07,06,08,13,06,14,05,11,14,07,07,13,11]
+                            },
+                            {
+                                name:'3号幸运红球',
+                                type:'bar',
+                                stack: '总量',
+                                data:[05,09,11,20,24,10,11,12,15,08,09,07,10,16,16,09,19,16,04,16,21,13,12,22,11,10,13,14,17,21,06,13,19,17,14,19,20,16,08,25,20,16,09,22,25,15,20,08,10,13,21,17,05,20,13,17,18,08,11,14,14,09,15,22,18,09,10,24,08,15,07,17,11,24,12,14,17,20,10,13,04,15,19,11,18,15,11,12,16,09,17,21,16,07,14,15,10,09,17,12]
+                            },
+                            {
+                                name:'4号幸运红球',
+                                type:'bar',
+                                stack: '总量',
+                                data:[12,12,16,21,26,18,21,18,23,14,13,08,19,18,17,16,22,18,23,19,23,26,14,24,17,11,26,20,23,28,13,21,21,19,22,27,24,19,16,27,22,18,14,26,27,20,22,10,19,19,25,22,20,28,19,18,21,24,17,19,17,16,18,26,27,16,18,25,16,18,10,22,16,26,16,17,22,24,14,22,13,24,21,17,27,26,12,18,17,22,18,29,18,22,15,19,26,16,21,15]
+                            },
+                            {
+                                name:'5号幸运红球',
+                                type:'bar',
+                                stack: '总量',
+                                data:[18,22,22,28,27,23,23,26,26,24,21,19,20,20,22,32,24,21,31,20,25,30,21,28,19,14,27,26,24,30,16,25,26,22,25,28,29,20,18,28,28,29,28,28,28,26,26,13,23,21,26,26,21,29,21,23,26,25,24,26,23,22,21,32,31,25,19,26,18,19,22,32,25,28,17,20,25,26,23,30,14,26,23,21,30,29,14,28,26,24,20,31,29,26,16,21,27,26,22,27]
+                            },
+                            {
+                                name:'6号幸运红球',
+                                type:'bar',
+                                stack: '总量',
+                                data:[27,28,25,29,29,31,31,32,28,32,26,27,27,30,23,33,27,25,32,26,26,32,23,29,21,22,33,27,31,31,17,31,27,31,33,29,31,28,22,29,29,32,30,31,30,32,29,27,27,32,29,27,31,31,29,30,27,31,28,29,27,32,26,33,32,32,20,32,20,28,26,33,26,32,31,23,27,27,31,31,16,27,32,25,32,30,33,31,33,33,27,32,32,32,26,28,28,29,33,32]
+                            },
+                            {
+                                name:'幸运蓝球',
+                                type:'bar',
+                                stack: '总量',
+                                data:[01,07,07,12,16,08,12,12,11,03,01,12,11,12,04,13,15,08,13,12,01,14,06,05,08,09,01,04,07,04,10,08,01,11,15,01,09,11,12,05,15,05,07,13,02,11,02,16,09,04,08,04,05,08,15,15,10,14,16,12,01,12,16,04,13,14,15,04,14,02,07,10,12,09,04,05,10,09,01,07,02,15,08,06,16,12,14,03,03,03,13,05,16,11,07,07,14,07,13,14]
+                            }
+                        ]
+                    };
+
+                    myChart.setOption(option);
+
+
+                    var myChart2 = ec.init(document.getElementById('main2'));
+                    myChart2.setOption(option2);
+
+                    myChart.connect(myChart2);
+                    myChart2.connect(myChart);
+
+                    myChart2.on("click",function(param){
+                        var dataIndex = param.dataIndex;
+
+
+                        var red1 = this.getSeries()[0].data[dataIndex];
+                        var red2 = this.getSeries()[1].data[dataIndex];
+                        var red3 = this.getSeries()[2].data[dataIndex];
+                        var red4 = this.getSeries()[3].data[dataIndex];
+                        var red5 = this.getSeries()[4].data[dataIndex];
+                        var red6 = this.getSeries()[5].data[dataIndex];
+                        var blue = this.getSeries()[6].data[dataIndex];
+
+                        option.series[0].name=param.name;
+                        option.series[0].data[0].value=red1;
+                        option.series[0].data[1].value=red2;
+                        option.series[0].data[2].value=red3;
+                        option.series[0].data[3].value=red4;
+                        option.series[0].data[4].value=red5;
+                        option.series[0].data[5].value=red6;
+                        option.series[0].data[6].value=blue;
+
+                        myChart.setOption(option);
+
+//                        alert('你点击我了！');
+                    });
+
+                    setTimeout(function (){
+                        window.onresize = function () {
+                            myChart.resize();
+                            myChart2.resize();
+                        }
+                    },200)
+                }
+        );
+    </script>
+</body>
+</html>
